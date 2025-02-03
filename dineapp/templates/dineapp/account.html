@@ -1,0 +1,51 @@
+{% extends 'dineapp/base.html' %}
+
+{% block pgtitle %}Dashboard{% endblock %}
+
+{% block title %}DineSmart | Dashboard{% endblock %}
+<div>{% block content %} {% load static %}</div>
+<!-- start -->
+
+<div>
+    <!-- body -->
+    <section>
+        <div class="pb-10">
+            <div class="mx-20 text-center border border-gray-300 shadow shaodw-md shadow-gray-400 rounded-md p-1">
+                <img class="h-40 mx-auto" src="{% static 'dineapp/images/profile.jfif' %}" alt="Profile Image">
+            </div>
+            <div class="p-2 m-2 border rounded-md bg-yellow-100 ">
+                <p class="text-center font-bold text-md mb-2">Details</p>
+                <p>Name : ABC User</p>
+                <p>Phone No. : 2837736632</p>
+                <p>Email : abc@gmail.com</p>
+                <p>Total Transcations : 23</p>
+                <p class="p-1 border rounded-md bg-yellow-300 text-center font-bold mt-2">
+                    Total Credit : Rs.830
+                </p>
+                <p class="text-xs font-bold text-center mt-1">Note: We give 10% Credit on per Transcation</p>
+            </div>
+
+            <!-- Transaction  -->
+            <a href="/transaction/" rel="noopener noreferrer">
+                <div class="text-md font-bold p-1 m-2 border rounded-md bg-indigo-300 text-center">
+                    <i class="fa-solid fa-money-bill-wave mr-2"></i>See Transaction History
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- App Info -->
+    <section class="text-center font-bold font-mono">
+        App Version : 1.0
+        <br/>
+        
+        Release Date : 22-Oct-2024
+
+    </section>
+
+</div>
+
+
+
+<!-- end -->
+{% endblock %}

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% load static %}
+
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="static\setup\tailwindcss.js"></script>
+    <script src="{% static 'dineapp\setup\tailwindcss.js' %}"></script>
+
+
+    <style>
+        /* Style for fixed navigation bar */
+        .fixed-bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #076119;
+            display: flex;
+            justify-content: space-around;
+            padding: 2px;
+            z-index: 1000;
+        }
+
+        .bottom-nav-icon {
+            color: #fff;
+            font-size: 24px;
+        }
+    </style>
+    <title>Menu</title>
+</head>
+<body>
+
+    <!-- App Header -->
+    <section class="fixed top-0 left-0 w-full z-50 border p-2 text-xl text-center font-bold bg-white shadow">
+        DineSmart [ Menu ]
+    </section>
+
+
+
+    <!-- App Body -->
+    <section class="pt-14 pb-20 grid grid-cols-2 gap-1 px-1">
+        <div class="border rounded-md p-1 rounded-md items-center">
+            <img src="{% static 'dineapp/images/profile.jfif' %}" class="h-36 mx-auto rounded-md mt-1" alt="item img">
+            <div class="text-left text-md font-bold my-2">Poha Plate</div>
+            <div class="text-center font-bold text-xs border p-1 rounded-md bg-yellow-300">Rs. 400</div>
+        </div>
+        <div class="border rounded-md p-1 rounded-md items-center">
+            <img src="{% static 'dineapp/images/profile.jfif' %}" class="h-36 mx-auto rounded-md mt-1" alt="item img">
+            <div class="text-left text-md font-bold my-2">Poha Plate</div>
+            <div class="text-center font-bold text-xs border p-1 rounded-md bg-yellow-300">Rs. 400</div>
+        </div>
+        <div class="border rounded-md p-1 rounded-md items-center">
+            <img src="{% static 'dineapp/images/profile.jfif' %}" class="h-36 mx-auto rounded-md mt-1" alt="item img">
+            <div class="text-left text-md font-bold my-2">Poha Plate</div>
+            <div class="text-center font-bold text-xs border p-1 rounded-md bg-yellow-300">Rs. 400</div>
+        </div>
+        <div class="border rounded-md p-1 rounded-md items-center">
+            <img src="{% static 'dineapp/images/profile.jfif' %}" class="h-36 mx-auto rounded-md mt-1" alt="item img">
+            <div class="text-left text-md font-bold my-2">Poha Plate</div>
+            <div class="text-center font-bold text-xs border p-1 rounded-md bg-yellow-300">Rs. 400</div>
+        </div>
+        <div class="border rounded-md p-1 rounded-md items-center">
+            <img src="{% static 'dineapp/images/profile.jfif' %}" class="h-36 mx-auto rounded-md mt-1" alt="item img">
+            <div class="text-left text-md font-bold my-2">Poha Plate</div>
+            <div class="text-center font-bold text-xs border p-1 rounded-md bg-yellow-300">Rs. 400</div>
+        </div>
+        <div class="border rounded-md p-1 rounded-md items-center">
+            <img src="{% static 'dineapp/images/profile.jfif' %}" class="h-36 mx-auto rounded-md mt-1" alt="item img">
+            <div class="text-left text-md font-bold my-2">Poha Plate</div>
+            <div class="text-center font-bold text-xs border p-1 rounded-md bg-yellow-300">Rs. 400</div>
+        </div>
+
+
+
+
+
+
+
+    </section>
+
+
+
+
+
+    <!-- App Footer : Fixed bottom navigation bar  -->
+    <section>
+        <nav class="fixed-bottom-nav text-center">
+            <a href="/dashboard/" class="bottom-nav-icon text-sm "><i class="fas fa-home"></i><br>Home</a>
+            <a href="/menu/" class="bottom-nav-icon text-sm "><i class="fas fa-table-cells-large"></i><br>Menu</a>
+            <a href="/account/" class="bottom-nav-icon text-sm "><i class="fas fa-user-group"></i><br>Account</a>
+        </nav>
+    </section>
+
+</body>
+</html>
