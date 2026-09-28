@@ -1,0 +1,48 @@
+{% extends 'restaurant/base.html' %}
+
+{% block title %}Offer{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-2 py-6">
+
+    <!-- Add Sale Button -->
+    <div class="text-center mb-6">
+
+    </div>
+
+    <h1 class="text-3xl font-semibold text-center text-gray-800 mb-6">Offer <a href="{% url 'restaurantsalesadd' %}" class="bg-green-600 text-white px-6 py-3 rounded-md text-sm md:text-xl font-semibold hover:bg-green-700 transition">
+        ➕ Add New Offer
+    </a></h1>
+
+    <!-- Filter Sales by Status -->
+    <div class="text-xl font-semibold text-gray-800 mb-4 text-center">Filters</div>
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <a href="?status=all" class="bg-blue-500 text-white px-6 py-3 rounded-md">
+            All Offer ({{ all_count }})</a>
+        <a href="?status=incoming" class="bg-yellow-500 text-white px-6 py-3 rounded-md">Incoming ({{ incoming_count }})</a>
+        <a href="?status=active" class="bg-green-500 text-white px-6 py-3 rounded-md">Active ({{ active_count }})</a>
+        <a href="?status=closed" class="bg-red-500 text-white px-6 py-3 rounded-md">Closed ({{ closed_count }})</a>
+    </div>
+
+    <!-- Sales List -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {% for sale in sales %}
+        <div class="bg-white p-4 rounded shadow-md">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+                <img src="{{ sale.baseimg }}" class="w-24 h-24 rounded-full border-2 border-gray-300">
+
+                <div class="col-span-2">
+                    <h3 class="text-xl font-semibold">{{ sale.title }}</h3>
+                    <p class="text-sm text-gray-600">{{ sale.description }}</p>
+                    <p class="text-gray-500">From: {{ sale.startdate }} to {{ sale.enddate }}</p>
+                    <p class="text-gray-500">Status: {{ sale.status }}</p>
+                    <a href="{% url 'restaurantsalesedit' sale.saleid %}" class="text-blue-600">🖊️ Edit</a> |    
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}

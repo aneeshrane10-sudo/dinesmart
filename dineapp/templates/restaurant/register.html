@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Register</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+
+    <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+        <h2 class="text-2xl font-bold text-center text-green-600">Register Your Restaurant</h2>
+
+        {% if error_message %}
+            <p class="text-red-500 text-center mt-2">{{ error_message }}</p>
+        {% endif %}
+
+        <form method="POST" class="space-y-4" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="text" name="restaurant_name" placeholder="Restaurant Name" required class="w-full p-3 border rounded-md">
+            <input type="text" name="username" placeholder="Username" required class="w-full p-3 border rounded-md">
+            <input type="text" name="address" placeholder="Enter Address here" required class="w-full p-3 border rounded-md">
+            <input type="text" name="website" placeholder="Enter Website here" required class="w-full p-3 border rounded-md">
+            <input type="number" name="contact" placeholder="Enter Contact here" required pattern="[0-9]{10}" title="Please enter a valid 10-digit contact number" class="w-full p-3 border rounded-md" maxlength="10">
+
+            <input type="email" name="email" placeholder="Email" required class="w-full p-3 border rounded-md">
+            <input type="password" name="password" placeholder="Password" required class="w-full p-3 border rounded-md">
+
+            <!-- New Fields: Latitude and Longitude -->
+            <input type="text" name="latitude" placeholder="Latitude" required class="w-full p-3 border rounded-md">
+            <input type="text" name="longitude" placeholder="Longitude" required class="w-full p-3 border rounded-md">
+
+            <!-- New Field: Restaurant Logo -->
+            <input type="file" name="logo" accept="image/*" class="w-full p-3 border rounded-md">
+
+            <button type="submit" class="w-full bg-green-500 text-white py-3 rounded-md">Register</button>
+        </form>
+
+        <p class="mt-4 text-center">
+            Already have an account? <a href="{% url 'restaurantlogin' %}" class="text-green-500">Login</a>
+        </p>
+        <div class="pt-8"><a href="{% url 'user_login' %}" class="text-center text-black">🤵 Customer Login</a></div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}DineSmart{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+
+    <!-- Fixed Navbar -->
+    <div class="fixed top-0 left-0 right-0 p-4 flex justify-between items-center bg-white shadow-md z-50">
+        <div class="text-lg font-bold text-green-600">DineSmart</div>
+        <div class="ml-2 flex items-center space-x-1">
+            <!-- <span class="text-gray-600 text-xs">Current location</span>
+            <span class="text-green-600 font-bold">📍 Dadar, India</span> -->
+        </div>
+        <div class="flex space-x-2">
+            <a href="{% url 'notifications' %}" class="text-gray-600 text-xl">🔔</a>
+        </div>
+    </div>
+
+    <!-- Main Content with padding to prevent overlap -->
+    <div class="pb-16 pt-[60px] px-2">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <!-- Fixed Bottom Navigation -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white shadow-md p-4 flex justify-around z-50">
+        <a href="/" class="text-gray-600 text-xl">🏠</a>
+        <a href="{% url 'chatbot' %}" class="text-gray-600 text-xl">🤖</a>
+        <a href="{% url 'search' %}" class="text-gray-600 text-xl">🔍</a>
+        <a href="{% url 'viewcart' %}" class="text-gray-600 text-xl">🛒</a>
+        <a href="{% url 'profile' %}" class="text-gray-600 text-xl">👤</a>
+    </div>
+
+</body>
+</html>

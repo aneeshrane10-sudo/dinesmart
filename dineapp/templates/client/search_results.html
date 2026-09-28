@@ -1,0 +1,54 @@
+{% extends 'client/base.html' %}
+
+{% block title %}Search Results - DineSmart{% endblock %}
+
+{% block content %}
+    <div class="max-w-4xl mx-auto mt-10">
+        <h2 class="text-2xl font-bold text-center mb-6">Search Results for "{{ query }}"</h2>
+
+        {% if search_type == 'product' %}
+            <h3 class="text-xl mb-4">Products:</h3>
+            {% if products %}
+                <ul>
+                    {% for product in products %}
+                        <li class="mb-4 p-4 border-b">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h4 class="text-lg font-semibold">{{ product.name }}</h4>
+                                    <p class="text-gray-500">{{ product.category }} - Rs. {{ product.price }}</p>
+                                </div>
+                                <div>
+                                    <img src="{{ product.image }}" alt="{{ product.name }}" class="h-16 w-16 object-cover rounded-md">
+                                </div>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No products found matching your query.</p>
+            {% endif %}
+        {% elif search_type == 'restaurant' %}
+            <h3 class="text-xl mb-4">Restaurants:</h3>
+            {% if restaurants %}
+                <ul>
+                    {% for restaurant in restaurants %}
+                        <a href="{% url 'restpublicprofile' restaurant.restaurantid %}" class="mb-4 p-4 border-b border-purple-400">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h4 class="text-lg font-semibold">{{ restaurant.name }}</h4>
+                                    <p class="text-gray-500">{{ restaurant.address }}</p>
+                                    <p class="text-gray-500">Contact: {{ restaurant.contact }}</p>
+                                </div>
+                                <div>
+                                    <img src="{{ restaurant.baseimg }}" alt="{{ restaurant.name }}" class="h-16 w-16 object-cover rounded-md">
+                                </div>
+                            </div>
+                        </a>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No restaurants found matching your query.</p>
+            {% endif %}
+        {% endif %}
+    </div>
+{% endblock %}

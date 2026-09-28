@@ -1,0 +1,139 @@
+{% extends 'restaurant/base.html' %}
+
+{% block title %}Restaurant Profile{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-6">
+    <h1 class="text-3xl font-semibold text-center text-gray-800 mb-6">Restaurant Profile</h1>
+
+    <!-- Restaurant Details Section -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-6 grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="flex items-center space-x-6">
+            {% if restaurant.baseimg and restaurant.baseimg != "*" %}
+            <img src="data:image/jpeg;base64,{{ restaurant.baseimg }}" class="w-24 h-24 rounded-full border-2 border-gray-300">
+            {% else %}
+            <div class="w-24 h-24 rounded-full bg-gray-300 flex items-center justify-center text-white">
+                <span class="text-xl">{{ restaurant.name|slice:":1" }}</span>
+            </div>
+            {% endif %}
+            <div>
+                <p class="text-xl font-semibold text-gray-800">{{ restaurant.name }}</p>
+                <p class="text-sm text-gray-500">{{ restaurant.owner |title }}</p>
+            </div>
+
+            <a href="/qrscanner" class="mt-4 px-6 py-2 bg-indigo-100 hover:bg-indigo-400 hover:text-white text-gray-700 rounded-md font-semibold">Download APP (.apk)</a>
+            
+        </div>
+        <div class="mt-4 col-span-3">
+            <p><strong>Contact:</strong> +91 {{ restaurant.contact }}</p>
+            <p><strong>Address:</strong> {{ restaurant.address }}</p>
+            <!-- <p><strong>Website:</strong> <a href="/{{ restaurant.website }}" target="_blank" class="text-blue-600">{{ restaurant.website }}</a></p> -->
+
+            <p>
+              <strong>Website:</strong> 
+              <a href="{{ restaurant.website }}" target="_blank" class="text-blue-600">
+                {{ restaurant.website }}
+              </a>
+            </p>
+            
+            <p><strong>Rating:</strong> {{ restaurant.rating }} ⭐</p>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+
+        <!-- View Gallery Button -->
+        <div class="text-center">
+            <a href="{% url 'restaurantGallery' %}" class="inline-block  hover:text-white border border-gray-800 px-6 py-3 rounded-md font-semibold hover:bg-blue-600 transition">
+                📷 View Restaurant Gallery
+            </a>
+        </div>
+
+        <!-- Feedback -->
+        <div class="text-center">
+            <a href="{% url 'restaurantfeedback' %}" class="inline-block  hover:text-white border border-gray-800 px-6 py-3 rounded-md font-semibold hover:bg-blue-600 transition">
+                🖊️ Customer Feedback
+            </a>
+        </div>
+
+        <!-- Edit Profile Button -->
+        <div class="text-center">
+            <button onclick="toggleEditForm()" class="inline-block bg-yellow-500 text-white px-6 py-3 rounded-md font-semibold hover:bg-yellow-600 transition">
+                ✏️ Edit Profile
+            </button>
+        </div>
+
+
+
+    </div>
+
+    <!-- Update Profile Section (Initially Hidden) -->
+    <div id="editForm" class="bg-white shadow-md rounded-lg p-6 hidden">
+        <form method="POST" enctype="multipart/form-data" class="space-y-6">
+            {% csrf_token %}
+
+            <div>
+                <label for="owner" class="block font-semibold text-gray-700">Owner</label>
+                <input type="text" name="owner" id="owner" value="{{ restaurant.owner.username }}" class="w-full p-3 border rounded-md" required readonly>
+            </div>
+
+            <div>
+                <label for="name" class="block font-semibold text-gray-700">Restaurant Name</label>
+                <input type="text" name="name" id="name" value="{{ restaurant.name }}" class="w-full p-3 border rounded-md" required>
+            </div>
+
+            <div>
+                <label for="contact" class="block font-semibold text-gray-700">Contact Number</label>
+                <input type="text" name="contact" id="contact" value="{{ restaurant.contact }}" class="w-full p-3 border rounded-md" required>
+            </div>
+
+            <div>
+                <label for="address" class="block font-semibold text-gray-700">Address</label>
+                <input type="text" name="address" id="address" value="{{ restaurant.address }}" class="w-full p-3 border rounded-md" required>
+            </div>
+
+            <div>
+                <label for="email" class="block font-semibold text-gray-700">Email</label>
+                <input type="email" name="email" id="email" value="{{ restaurant.email }}" class="w-full p-3 border rounded-md" required>
+            </div>
+
+            <div>
+                <label for="website" class="block font-semibold text-gray-700">Website (Optional)</label>
+                <input type="text" name="website" id="website" value="{{ restaurant.website }}" class="w-full p-3 border rounded-md">
+            </div>
+
+            <div>
+                <label for="latitude" class="block font-semibold text-gray-700">Latitude</label>
+                <input type="text" name="latitude" id="latitude" value="{{ restaurant.latitude }}" class="w-full p-3 border rounded-md">
+            </div>
+
+            <div>
+                <label for="longitude" class="block font-semibold text-gray-700">Longitude</label>
+                <input type="text" name="longitude" id="longitude" value="{{ restaurant.longitude }}" class="w-full p-3 border rounded-md">
+            </div>
+
+            <div>
+                <label for="baseimg" class="block font-semibold text-gray-700">Restaurant Logo (Optional)</label>
+                <input type="file" name="baseimg" id="baseimg" accept="image/*" class="w-full p-3 border rounded-md">
+            </div>
+
+            <div>
+                <button type="submit" class="w-full bg-green-600 text-white p-3 rounded-md font-bold hover:bg-green-700 transition">Update Profile</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Function to toggle visibility of the edit profile form
+    function toggleEditForm() {
+        var editForm = document.getElementById("editForm");
+        if (editForm.classList.contains("hidden")) {
+            editForm.classList.remove("hidden");
+        } else {
+            editForm.classList.add("hidden");
+        }
+    }
+</script>
+
+{% endblock %}

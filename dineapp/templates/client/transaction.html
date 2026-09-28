@@ -1,0 +1,32 @@
+{% extends 'client/base.html' %}
+{% block title %}Transaction History - DineSmart{% endblock %}
+{% block content %}
+{% load static %}
+  
+<div class="min-h-screen bg-gray-100 p-4">
+  <h1 class="text-2xl font-bold mb-6 text-center">Transaction History</h1>
+  
+  <!-- Responsive Grid: 1 column on mobile, 2 columns on larger screens -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    {% for transaction in transactions %}
+    <div class="bg-white rounded-lg shadow p-4">
+      <div class="flex justify-between items-center mb-2">
+        <span class="text-sm text-gray-500">{{ transaction.createdon|date:"M d, Y" }}</span>
+        <span class="text-sm font-bold text-blue-500">ID: {{ transaction.transaction_id }}</span>
+      </div>
+      <h2 class="text-lg font-semibold mb-1">{{ transaction.restaurantname }}</h2>
+      
+      <div class="flex justify-between items-center">
+        <span class="text-gray-800 font-medium">Bill: ₹{{ transaction.billamount }}</span>
+        {% if transaction.discountamount > 0 %}
+        <span class="text-green-600 font-medium">Discount: ₹{{ transaction.discountamount }}</span>
+        {% endif %}
+      </div>
+    </div>
+    {% empty %}
+    <p class="text-gray-500 text-center col-span-2">No transactions found.</p>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock %}

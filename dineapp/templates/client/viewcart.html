@@ -1,0 +1,119 @@
+{% extends 'client/base.html' %}
+
+{% block title %}View Cart{% endblock %}
+
+
+
+{% block content %}
+
+<head>
+    <meta http-equiv="refresh" content="5">
+</head>
+
+<div class="container mx-auto mt-8">
+    <h1 class="text-2xl font-bold mb-6">
+        <div class="mb-6">Your Cart</div> 
+        <span id="totalAmountDisplay">Total Amount: Rs. {{ totalAmount }}</span>
+
+        {% if totalAmount %}
+            <a href="{% url 'stripepayment' %}" class="p-1 px-2 border rounded-md bg-yellow-500 hover:bg-yellow-600 ml-8">
+                <i class="fa-regular fa-credit-card mr-2"></i>Pay Now
+            </a>
+        {% endif %}
+    </h1>
+
+    {% if cartData %}
+        <table class="table-auto w-full bg-white rounded shadow-md">
+            <thead>
+                <tr class="bg-gray-100">
+                    <th class="p-2 text-left">Image</th>
+                    <th class="p-1 text-left">Product Name</th>
+                    <th class="p-1 text-right">Price</th>
+                    <th class="p-1 text-right">Quantity</th>
+                    <th class="p-1 text-right">Total Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cartData %}
+                    <tr class="border-t">
+                        <td class="p-4">
+                            <img src="{{ item.productimage }}" alt="{{ item.productname }}" class="w-16 h-16 rounded-md">
+                        </td>
+                        <td class="p-2">{{ item.productname | title }}</td>
+                        <td class="p-2 text-right">Rs. {{ item.productprice }}</td>
+
+
+                        <!-- Add a new 'Remove' button inside each row -->
+                        <td class="p-4 text-right">
+                            <button class="px-1 py-1 bg-red-500 text-white rounded decrease-qty" data-cart-id="{{ item.cartid }}">-</button>
+                            <span class="mx-2" id="qty-{{ item.cartid }}">{{ item.quantity }}</span>
+                            <button class="px-1 py-1 bg-green-500 text-white rounded increase-qty" data-cart-id="{{ item.cartid }}">+</button>
+                            <button class="px-1 py-1 bg-gray-700 text-white rounded remove-item ml-4" data-cart-id="{{ item.cartid }}">Remove</button> <!-- New Remove Button -->
+                        </td>
+
+
+                        
+                        <td class="p-4 text-right" id="total-{{ item.cartid }}">Rs. {{ item.total_price }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="text-gray-500">Your cart is empty.</p>
+    {% endif %}
+</div>
+
+<script>
+    
+
+
+
+
+    document.addEventListener("DOMContentLoaded", function () {
+        function updateCart(cartId, action) {
+            fetch(`/updatecart?cartId=${cartId}&action=${action}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        if (action === "remove") {
+                            document.querySelector(`button[data-cart-id="${cartId}"]`).closest("tr").remove();
+                        } else {
+                            document.getElementById(`qty-${cartId}`).textContent = data.newQuantity;
+                            document.getElementById(`total-${cartId}`).textContent = `Rs. ${data.newTotal}`;
+                        }
+                        document.getElementById("totalAmountDisplay").textContent = `Total Amount: Rs. ${data.totalAmount}`;
+                    } else {
+                        alert(data.error);
+                    }
+                })
+                .catch(error => console.error("Error:", error));
+        }
+
+        document.querySelectorAll(".increase-qty").forEach(button => {
+            button.addEventListener("click", function () {
+                let cartId = this.getAttribute("data-cart-id");
+                updateCart(cartId, "increase");
+            });
+        });
+
+        document.querySelectorAll(".decrease-qty").forEach(button => {
+            button.addEventListener("click", function () {
+                let cartId = this.getAttribute("data-cart-id");
+                updateCart(cartId, "decrease");
+            });
+        });
+
+        document.querySelectorAll(".remove-item").forEach(button => {
+            button.addEventListener("click", function () {
+                if (confirm("Are you sure you want to remove this item?")) {
+                    let cartId = this.getAttribute("data-cart-id");
+                    updateCart(cartId, "remove");
+                }
+            });
+        });
+    });
+
+
+    
+</script>
+{% endblock %}

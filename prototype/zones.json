@@ -1,0 +1,94 @@
+[
+  {
+    "zone_id": "zone_1",
+    "label": "Table 1",
+    "polygon_coords": [
+      [
+        1007,
+        308
+      ],
+      [
+        1012,
+        392
+      ],
+      [
+        1293,
+        380
+      ],
+      [
+        1278,
+        321
+      ]
+    ],
+    "cooldown_seconds": 300
+  },
+  {
+    "zone_id": "zone_2",
+    "label": "Table 2",
+    "polygon_coords": [
+      [
+        977,
+        456
+      ],
+      [
+        977,
+        513
+      ],
+      [
+        1376,
+        513
+      ],
+      [
+        1356,
+        437
+      ]
+    ],
+    "cooldown_seconds": 300
+  },
+  {
+    "zone_id": "zone_3",
+    "label": "Table 3",
+    "polygon_coords": [
+      [
+        1012,
+        586
+      ],
+      [
+        1017,
+        667
+      ],
+      [
+        1414,
+        672
+      ],
+      [
+        1400,
+        581
+      ]
+    ],
+    "cooldown_seconds": 300
+  },
+  {
+    "zone_id": "zone_4",
+    "label": "Table 4",
+    "polygon_coords": [
+      [
+        1022,
+        763
+      ],
+      [
+        1041,
+        1028
+      ],
+      [
+        1592,
+        1025
+      ],
+      [
+        1501,
+        754
+      ]
+    ],
+    "cooldown_seconds": 300
+  }
+]

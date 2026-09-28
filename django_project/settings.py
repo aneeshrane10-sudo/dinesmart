@@ -21,18 +21,23 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-4ju2n@$f9d0c=h)_g0lbb%k9&@rf(xa$d$g$&5ri$uf)*gev^4'
+SECRET_KEY = 'Enter Django API Key '
+
+GEMINI_API_KEY  = 'Enter API key' #project key
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [".replit.dev", ".replit.app", ".pike.repl.co"]
-CSRF_TRUSTED_ORIGINS = ["https://*.replit.dev", "https://*.replit.app"]
+ALLOWED_HOSTS = ["127.0.0.1", "localhost", ".replit.dev", ".replit.app", ".pike.repl.co"]
+CSRF_TRUSTED_ORIGINS = ["http://127.0.0.1:8000", "http://localhost:8000", "https://*.replit.dev", "https://*.replit.app"]
 
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'dineapp.apps.DineappConfig',
+    'channels',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -41,6 +46,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
+
+# Django Channels — ASGI application
+ASGI_APPLICATION = 'django_project.asgi.application'
+
+# Channel layers — in-memory for development (swap for Redis in production)
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    },
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

@@ -1,0 +1,20 @@
+{% extends 'client/base.html' %}
+
+{% block title %}Products - DineSmart{% endblock %}
+
+{% block content %}
+    <h2 class="text-lg font-bold mb-2">Our Menu</h2>
+    <div class="grid grid-cols-2 gap-4">
+        {% for product in products %}
+        <div class="bg-white rounded-lg shadow-md p-2">
+            <img src="{{ product.image_url }}" class="rounded-lg w-full" alt="{{ product.name }}">
+            <div class="p-2">
+                <h3 class="font-bold">{{ product.name }}</h3>
+                <p class="text-sm text-gray-500">{{ product.description }}</p>
+                <p class="text-green-600 font-bold">${{ product.price }}</p>
+                <button class="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md">Add to Cart</button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}

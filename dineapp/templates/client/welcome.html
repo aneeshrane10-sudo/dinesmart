@@ -1,0 +1,121 @@
+{% extends 'client/base.html' %}
+
+{% block title %}Welcome - DineSmart{% endblock %}
+
+{% block content %}
+
+    <!-- Promo Banner -->
+    <div class="relative bg-cover bg-center rounded-lg text-white overflow-hidden" style="background-image: url('{{ activesale.baseimg }}'); height: 230px;">
+        <div class="absolute inset-0 bg-black opacity-50"></div> <!-- Dark overlay to make text more readable -->
+        
+        <div class="relative z-10 p-6 flex items-center justify-between h-full">
+            <!-- Left Section for Text -->
+            <div class="text-center w-full">
+                <h2 class="text-2xl font-bold text-white mb-4">{{ activesale.title }}</h2>
+                <p class="text-lg text-white mb-6">{{ activesale.description }}</p>
+                
+                <!-- Order Now Button -->
+                <!-- <a href="{% url 'restpublicprofile' activesale.restaurantid %}" class="px-6 py-3 bg-yellow-500 text-black rounded-md font-semibold hover:bg-yellow-600 transition duration-300">
+                    Order Now
+                </a> -->
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Categories -->
+    <div class="grid grid-cols-4 gap-4 mt-4">
+        {% for category in categories %}
+        <a href="{% url 'categoryProducts' category.name %}" class="p-4 bg-white rounded-lg shadow-md flex flex-col items-center">
+            {{ category.emoji }} <span class="text-sm mt-1">{{ category.name }}</span>
+        </a>
+        {% endfor %}
+    </div>
+
+
+    <!-- Featured Restaurants (Top 5 by Rating) -->
+    <div class="mt-6">
+        <h2 class="text-lg font-bold mb-3">🏆 Featured Restaurants</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {% for restaurant in featured_restaurants %}
+            <a href="{% url 'restpublicprofile' restaurant.restaurantid %}" class="bg-white rounded-lg shadow-md p-2">
+                <img src="data:image/jpeg;base64,{{ restaurant.baseimg }}" class="mx-auto  w-[220px] h-32 object-cover" alt="{{ restaurant.name }} logo">
+                <div class="p-2">
+                    <h3 class="font-bold">{{ restaurant.name }}</h3>
+                    <p class="text-yellow-600 font-bold ">⭐ {{ restaurant.rating }}</p>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Most Dishes Restaurants -->
+    <div class="mt-6">
+        <h2 class="text-lg font-bold mb-3">🍽️ Most Dishes Available</h2>
+        <div class="grid grid-cols-2 md:grid-cols-6 gap-4">
+            {% for restaurant in most_dishes_restaurants %}
+            <a href="{% url 'restpublicprofile' restaurant.restaurantid %}" class="bg-white rounded-lg shadow-md p-2">
+                <h3 class="font-bold">{{ restaurant.name }}</h3>
+                <p class="text-gray-500">🍛 {{ restaurant.product_count }} Dishes</p>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- New Dish Arrivals -->
+    <div class="mt-6">
+        <h2 class="text-lg font-bold mb-3">🆕 New Dish Arrivals</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {% for product in new_dishes %}
+            <div class="bg-white rounded-lg shadow-md p-2">
+                <img src="{{ product.image }}" class="rounded-lg w-full h-32 object-cover" alt="{{ product.name }}">
+                <div class="p-2">
+                    <h3 class="font-bold">{{ product.name | title}}</h3>
+                    <p class="text-sm text-gray-500">🏠 {{ product.restaurant.name }}</p>
+                    <p class="text-gray-600">💰 ₹{{ product.price }}</p>
+
+                    <!-- Add to Cart Button -->
+                    <form method="POST" action="{% url 'addtocart' product.prodid %}">
+                        {% csrf_token %}
+                        <button type="submit" class="w-full bg-green-500 text-white py-2 rounded-md mt-2">Add to Cart</button>
+                    </form>
+
+
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Nearest Restaurants -->
+    <div class="mt-6">
+        <h2 class="text-lg font-bold mb-3">📍 Nearest Restaurants (Mumbai Dadar)</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {% for restaurant in nearest_restaurants %}
+            <a href="{% url 'restpublicprofile' restaurant.restaurantid %}" class="bg-white rounded-lg shadow-md p-2">
+                <h3 class="font-bold">{{ restaurant.name }}</h3>
+                <p class="text-gray-500">{{ restaurant.address }}</p>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+
+    {% if top_credit_restaurants %}
+    <!-- Top Credit Restaurants -->
+    <div class="my-6">
+        <h2 class="text-lg font-bold mb-3">💳 Top Credit Restaurants</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {% for restaurant in top_credit_restaurants %}
+            <a href="{% url 'restpublicprofile' restaurant.restaurantid %}" class="bg-white rounded-lg shadow-md p-2 text-center">
+                <img src="data:image/jpeg;base64,{{ restaurant.baseimg }}" class="rounded-lg w-32 h-32 object-cover mx-auto" alt="{{ restaurant.name }} logo">
+                <div class="p-2">
+                    <h3 class="font-bold">{{ restaurant.name }}</h3>
+                    <p class="text-yellow-800 font-bold">⭐ {{ restaurant.rating }}</p>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+{% endblock %}

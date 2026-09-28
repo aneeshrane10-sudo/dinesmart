@@ -1,0 +1,54 @@
+{% extends 'restaurant/base.html' %}
+
+{% block title %}Edit Offer{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-6">
+    <h1 class="text-3xl font-semibold text-center text-gray-800 mb-6">Edit Offer</h1>
+
+    <form method="POST" class="space-y-6" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div>
+            <label for="title" class="block font-semibold">Offer Title</label>
+            <input type="text" name="title" value="{{ sale.title }}" class="w-full p-3 border rounded-md" required>
+        </div>
+
+        <div>
+            <label for="description" class="block font-semibold">Description</label>
+            <input type="text" name="description" value="{{ sale.description }}" class="w-full p-3 border rounded-md" required>
+        </div>
+
+        <div>
+            <label for="startdate" class="block font-semibold">Start Date</label>
+            <input type="date" name="startdate" value="{{ sale.startdate }}" class="w-full p-3 border rounded-md" required>
+        </div>
+
+        <div>
+            <label for="enddate" class="block font-semibold">End Date</label>
+            <input type="date" name="enddate" value="{{ sale.enddate }}" class="w-full p-3 border rounded-md" required>
+        </div>
+
+        <div>
+            <label for="status" class="block font-semibold">Status</label>
+            <select name="status" class="w-full p-3 border rounded-md" required>
+                <option value="incoming" {% if sale.status == 'incoming' %}selected{% endif %}>Incoming</option>
+                <option value="active" {% if sale.status == 'active' %}selected{% endif %}>Active</option>
+                <option value="closed" {% if sale.status == 'closed' %}selected{% endif %}>Closed</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="baseimg" class="block font-semibold">Sale Image (Optional)</label>
+            <input type="file" name="baseimg" class="w-full p-3 border rounded-md">
+            {% if sale.baseimg %}
+            <div class="mt-2 ">
+                <img src="{{ sale.baseimg }}" alt="Sale Image" class="w-50 h-full object-cover">
+            </div>
+            {% endif %}
+        </div>
+
+        <button type="submit" class="w-full bg-green-600 text-white p-3 rounded-md font-bold hover:bg-green-700 transition">Update Offer</button>
+    </form>
+</div>
+{% endblock %}

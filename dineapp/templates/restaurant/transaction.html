@@ -1,0 +1,53 @@
+{% extends 'restaurant/base.html' %}
+
+{% block title %}Transactions{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-6">
+    <h1 class="text-3xl font-semibold text-center text-gray-800 mb-6">Transactions</h1>
+
+    <!-- Leaderboard: Top 3 Customers -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">🏆 Top 3 Customers</h2>
+
+        {% if top_customers %}
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {% for customer in top_customers %}
+            <div class="bg-yellow-100 p-4 rounded-lg text-center">
+                <p class="text-lg font-semibold">{{ customer.customername }}</p>
+                <p class="text-sm text-gray-600">Transactions: {{ customer.transaction_count }}</p>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-gray-500">No transactions available.</p>
+        {% endif %}
+    </div>
+
+    <!-- All Customers with Transaction Count -->
+    <div class="bg-white shadow-md rounded-lg p-6">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">📜 All Customers</h2>
+
+        {% if customer_transactions %}
+        <table class="w-full bg-white border border-gray-200">
+            <thead class="bg-gray-200">
+                <tr>
+                    <th class="p-3 text-left">Customer Name</th>
+                    <th class="p-3 text-left">Transaction Count</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for customer in customer_transactions %}
+                <tr class="border">
+                    <td class="p-3">{{ customer.customername }}</td>
+                    <td class="p-3">{{ customer.transaction_count }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="text-gray-500">No transactions found.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

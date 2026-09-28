@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Restaurant{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md p-4 flex justify-between items-center">
+        <div class="text-green-600 font-bold text-lg">DineSmart Restaurant</div>
+        <!-- Mobile view toggle (hamburger menu) -->
+        <div class="block sm:hidden">
+            <button id="menu-toggle" class="text-gray-600">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-6 w-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="hidden sm:flex items-center space-x-4">
+            <a href="{% url 'restaurantdashboard' %}" class="text-gray-600 hover:bg-gray-200 p-1 border rounded-md border-white font-bold hover:text-blue-600">Dashboard</a>
+            <a href="{% url 'restaurantallproducts' %}" class="text-gray-600 hover:bg-gray-200 p-1 border rounded-md border-white font-bold hover:text-blue-600">Products</a>
+            <a href="{% url 'restaurantsales' %}" class="text-gray hover:bg-gray-200 p-1 border rounded-md border-white font-bold hover:text-blue-600">Offer</a>
+            <a href="{% url 'restauranttransactions' %}" class="text-gray-600 hover:bg-gray-200 p-1 border rounded-md border-white font-bold hover:text-blue-600">Transactions</a>
+            <a href="{% url 'occupancy_dashboard' %}" class="text-gray-600 hover:bg-gray-200 p-1 border rounded-md border-white font-bold hover:text-green-600">🎯 Occupancy</a>
+            <a href="{% url 'restaurantprofile' %}" class="text-gray-600 hover:bg-gray-200 p-1 border rounded-md border-white font-bold hover:text-blue-600">Profile</a>
+            <a href="{% url 'restaurantlogout' %}" class="text-red-600 font-bold hover:bg-gray-200 p-1 border rounded-md border-white font-bold hover:text-blue-600">Logout</a>
+        </div>
+    </nav>
+
+    <!-- Sidebar for mobile view -->
+    <div id="mobile-menu" class="sm:hidden fixed inset-0 bg-gray-800 bg-opacity-90 z-50 hidden">
+        <div class="flex justify-end p-4">
+            <button id="menu-close" class="text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-6 w-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="flex flex-col items-center space-y-6">
+            <a href="{% url 'restaurantdashboard' %}" class="text-white text-xl">Dashboard</a>
+            <a href="{% url 'restaurantallproducts' %}" class="text-white text-xl">Products</a>
+            <a href="{% url 'restaurantsales' %}" class="text-white text-xl">Sales</a>
+            <a href="{% url 'restauranttransactions' %}" class="text-white text-xl">Transactions</a>
+            <a href="{% url 'occupancy_dashboard' %}" class="text-green-400 text-xl font-bold">🎯 Occupancy</a>
+            <a href="{% url 'restaurantprofile' %}" class="text-white text-xl">Profile</a>
+            <a href="{% url 'restaurantlogout' %}" class="text-red-600 text-xl font-bold">Logout</a>
+        </div>
+    </div>
+
+    <div class="p-6">
+        {% block content %}{% endblock %}
+    </div>
+
+    <script>
+        // Toggle mobile menu
+        const menuToggle = document.getElementById('menu-toggle');
+        const menuClose = document.getElementById('menu-close');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        menuToggle.addEventListener('click', () => {
+            mobileMenu.classList.remove('hidden');
+        });
+
+        menuClose.addEventListener('click', () => {
+            mobileMenu.classList.add('hidden');
+        });
+    </script>
+
+</body>
+</html>

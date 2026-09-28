@@ -1,0 +1,63 @@
+{% extends 'client/base.html' %}
+
+{% block title %}Chatbot - DineSmart{% endblock %}
+
+{% block content %}
+{% load static %}
+
+<!-- Chatbot Container -->
+<div class="h-screen flex flex-col bg-white">
+
+    <!-- Chat Messages (Scrollable Only) -->
+    <div class="flex-grow overflow-y-auto p-4 my-4 space-y-4 text-sm pb-20" id="chatWindow">
+        <div class="bg-green-400 p-3 rounded-lg mr-24 ">
+            <p><strong>Bot:</strong> Hello! How can I help you today?</p>
+        </div>
+
+        {% for message in messages %}
+            <div class="mt-4 ">
+
+                <!-- User Message -->
+                <div class="bg-blue-100 p-3 rounded-lg text-gray-800 ml-24">
+                    <p><strong>You:</strong> {{ message.query }}</p>
+                </div>
+
+                <!-- Bot Response -->
+                <div class="bg-green-100 p-3 rounded-lg mr-24 mt-4">
+                    <p><strong>Bot:</strong> {{ message.response | safe }}</p>
+                    <!-- <p><strong>Bot:</strong> {{ message.response  }}</p> -->
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Input Section (Fixed Bottom, Doesn't Scroll) -->
+    <form method="POST" class="p-4 flex items-center bg-green-400 rounded-t-lg fixed bottom-14 left-0 right-0">
+        {% csrf_token %}
+        <input type="text" name="username" value="{{ user.username }}" hidden>
+        <input id="userMessage" name="query" type="text" placeholder="Type your message..."
+               class="flex-grow p-3 rounded-lg bg-indigo-100 text-gray-800 focus:outline-none">
+        <button type="submit" id="sendBtn"
+                class="bg-yellow-300 hover:bg-yellow-800 hover:text-white text-gray-800 p-3 rounded-lg ml-4 font-bold">
+            <i class="fa-solid fa-paper-plane"></i> Send
+        </button>
+    </form>
+
+</div>
+
+<script>
+// Auto-scrolls chat window to bottom safely
+(function autoScrollToBottom() {
+    try {
+        const chatWindow = document.getElementById('chatWindow');
+        if (chatWindow) {
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+    } catch (error) {
+        console.error('Auto-scroll failed:', error);
+    }
+})();
+</script>
+
+
+{% endblock %}

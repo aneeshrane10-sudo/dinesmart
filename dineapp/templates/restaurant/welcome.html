@@ -1,0 +1,44 @@
+{% extends 'restaurant/base.html' %}
+
+{% block title %}Welcome - DineSmart{% endblock %}
+
+{% block content %}
+    <!-- Promo Banner -->
+    <div class="p-4 bg-green-500 rounded-lg text-white flex items-center justify-between">
+        <div>
+            <h2 class="text-lg font-bold">Claim your daily free delivery now!</h2>
+            <button class="mt-2 px-4 py-2 bg-black text-white rounded-md">Order now</button>
+        </div>
+        <div>
+            <img src="/static/dineapp/images/hero2.png" alt="Delivery" class="h-16 rounded-md">
+        </div>
+    </div>
+
+    <!-- Categories -->
+<!-- Categories -->
+<div class="grid grid-cols-4 gap-4 mt-4">
+    {% for category in categories %}
+    <a href="{% url 'categoryProducts' category.name %}" class="p-4 bg-white rounded-lg shadow-md flex flex-col items-center">
+        {{ category.emoji }} <span class="text-sm mt-1">{{ category.name }}</span>
+    </a>
+    {% endfor %}
+</div>
+
+
+    <!-- Featured Restaurants -->
+    <div class="mt-4">
+        <h2 class="text-lg font-bold mb-2">Featured</h2>
+        <div class="grid grid-cols-2 gap-4">
+            {% for restaurant in restaurants %}
+            <div class="bg-white rounded-lg shadow-md p-2">
+                <img src="{{ restaurant.image_url }}" class="rounded-lg w-full" alt="{{ restaurant.name }}">
+                <div class="p-2">
+                    <h3 class="font-bold">{{ restaurant.name }}</h3>
+                    <p class="text-sm text-gray-500">{{ restaurant.distance }} - {{ restaurant.delivery_time }}</p>
+                    <p class="text-yellow-500">⭐ {{ restaurant.rating }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

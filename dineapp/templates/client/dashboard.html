@@ -1,0 +1,250 @@
+{% extends 'dineapp/base.html' %}
+
+{% block pgtitle %}Dashboard{% endblock %}
+
+{% block css %}
+    /* Carousel container styling */
+    .carousel-container {
+        overflow: hidden; /* Hides the overflow content */
+        width: 100%; /* Adjusts to the full width of the screen */
+        display: flex;
+        justify-content: center;
+        margin-top: 10px;
+    }
+
+    /* Carousel styling */
+    .carousel {
+        display: flex;
+        overflow-x: scroll; /* Horizontal scroll */
+        scroll-snap-type: x mandatory; /* Enables snap to each image */
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling on mobile devices */
+    }
+
+    /* Each image item */
+    .carousel-item {
+        flex: 0 0 40%; /* Each image takes 80% of the container's width */
+        height: 160px; /* Adjust this as needed */
+        object-fit: cover;
+        scroll-snap-align: center; /* Snap the image to the center when scrolling */
+        margin: 0 5px;
+        border-radius: 8px;
+    }
+
+    /* Custom scrollbar utility */
+    .no-scrollbar::-webkit-scrollbar {
+        display: none; /* Hide scrollbar for Chrome, Safari, and Edge */
+    }
+
+    .no-scrollbar {
+        -ms-overflow-style: none; /* Hide scrollbar for Internet Explorer and Edge */
+        scrollbar-width: none; /* Hide scrollbar for Firefox */
+    }
+
+
+{% endblock %}
+
+
+{% block title %}DineSmart | Dashboard{% endblock %}
+<div>{% block content %} {% load static %}</div>
+<!-- start -->
+
+<!-- 
+Dashboard will have
+
+Ads, offeres, new arrivals, etc
+-->
+
+
+<div>
+    
+    <!-- Close to you -->
+    <div class="px-2">
+        <p class="font-bold text-gray-600">Close to you</p>
+    
+        <!-- Horizontal Scroll Container -->
+        <div class="flex overflow-x-auto space-x-4 py-4 no-scrollbar">
+            <!-- Card -->
+            <!-- Card -->
+
+
+
+
+
+            <!-- Card -->
+            <div class="relative flex-shrink-0 w-36 bg-white rounded-md ">
+                <!-- Image -->
+                <img class="w-full h-24 rounded-xl shadow-md" src="{% static 'dineapp/images/newarrivals2.jfif' %}" alt="Gupta Special Thali">
+                
+                <!-- Star Rating on Top-Right -->
+                <div class="absolute top-2 right-2 bg-green-700 px-2 py-1 rounded-full flex items-center space-x-1 shadow">
+                    <svg class="w-4 h-4 text-yellow-400" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 17.27L18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21z"/>
+                    </svg>
+                    <span class="text-xs font-bold text-gray-100">3.9</span>
+                </div>
+
+                <!-- Card Details -->
+                <div class="p-2">
+                    <div class="text-xs font-bold mt-1">Gupta Special Thali</div>
+                    <div class="text-xs text-gray-500 my-1">2.2km, Janpath</div>
+                    <b class="text-xs text-white font-mono bg-indigo-500 rounded-full px-2 py-[3px]">Save 10%</b>
+                </div>
+            </div>
+
+            <!-- Card -->
+            <div class="relative flex-shrink-0 w-36 bg-white rounded-md ">
+                <!-- Image -->
+                <img class="w-full h-24 rounded-xl shadow-md" src="{% static 'dineapp/images/newarrivals2.jfif' %}" alt="Gupta Special Thali">
+                
+                <!-- Star Rating on Top-Right -->
+                <div class="absolute top-2 right-2 bg-green-700 px-2 py-1 rounded-full flex items-center space-x-1 shadow">
+                    <svg class="w-4 h-4 text-yellow-400" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 17.27L18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21z"/>
+                    </svg>
+                    <span class="text-xs font-bold text-gray-100">3.9</span>
+                </div>
+
+                <!-- Card Details -->
+                <div class="p-2">
+                    <div class="text-xs font-bold mt-1">Gupta Special Thali</div>
+                    <div class="text-xs text-gray-500 my-1">2.2km, Janpath</div>
+                    <b class="text-xs text-white font-mono bg-indigo-500 rounded-full px-2 py-[3px]">Save 10%</b>
+                </div>
+            </div>
+
+            <!-- Card -->
+            <div class="relative flex-shrink-0 w-36 bg-white rounded-md ">
+                <!-- Image -->
+                <img class="w-full h-24 rounded-xl shadow-md" src="{% static 'dineapp/images/newarrivals2.jfif' %}" alt="Gupta Special Thali">
+                
+                <!-- Star Rating on Top-Right -->
+                <div class="absolute top-2 right-2 bg-green-700 px-2 py-1 rounded-full flex items-center space-x-1 shadow">
+                    <svg class="w-4 h-4 text-yellow-400" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 17.27L18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21z"/>
+                    </svg>
+                    <span class="text-xs font-bold text-gray-100">3.9</span>
+                </div>
+
+                <!-- Card Details -->
+                <div class="p-2">
+                    <div class="text-xs font-bold mt-1">Gupta Special Thali</div>
+                    <div class="text-xs text-gray-500 my-1">2.2km, Janpath</div>
+                    <b class="text-xs text-white font-mono bg-indigo-500 rounded-full px-2 py-[3px]">Save 10%</b>
+                </div>
+            </div>
+
+            <!-- Card -->
+            <div class="relative flex-shrink-0 w-36 bg-white rounded-md ">
+                <!-- Image -->
+                <img class="w-full h-24 rounded-xl shadow-md" src="{% static 'dineapp/images/newarrivals2.jfif' %}" alt="Gupta Special Thali">
+                
+                <!-- Star Rating on Top-Right -->
+                <div class="absolute top-2 right-2 bg-green-700 px-2 py-1 rounded-full flex items-center space-x-1 shadow">
+                    <svg class="w-4 h-4 text-yellow-400" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 17.27L18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21z"/>
+                    </svg>
+                    <span class="text-xs font-bold text-gray-100">3.9</span>
+                </div>
+
+                <!-- Card Details -->
+                <div class="p-2">
+                    <div class="text-xs font-bold mt-1">Gupta Special Thali</div>
+                    <div class="text-xs text-gray-500 my-1">2.2km, Janpath</div>
+                    <b class="text-xs text-white font-mono bg-indigo-500 rounded-full px-2 py-[3px]">Save 10%</b>
+                </div>
+            </div>
+
+            <!-- Card -->
+            <div class="relative flex-shrink-0 w-36 bg-white rounded-md ">
+                <!-- Image -->
+                <img class="w-full h-24 rounded-xl shadow-md" src="{% static 'dineapp/images/newarrivals2.jfif' %}" alt="Gupta Special Thali">
+                
+                <!-- Star Rating on Top-Right -->
+                <div class="absolute top-2 right-2 bg-green-700 px-2 py-1 rounded-full flex items-center space-x-1 shadow">
+                    <svg class="w-4 h-4 text-yellow-400" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 17.27L18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21z"/>
+                    </svg>
+                    <span class="text-xs font-bold text-gray-100">3.9</span>
+                </div>
+
+                <!-- Card Details -->
+                <div class="p-2">
+                    <div class="text-xs font-bold mt-1">Gupta Special Thali</div>
+                    <div class="text-xs text-gray-500 my-1">2.2km, Janpath</div>
+                    <b class="text-xs text-white font-mono bg-indigo-500 rounded-full px-2 py-[3px]">Save 10%</b>
+                </div>
+            </div>
+
+
+
+
+
+
+    
+           
+    
+            <!-- Add more cards as needed -->
+        </div>
+    </div>
+        
+    
+
+    <!-- Script for auto-scrolling -->
+    <script>
+        const carousel = document.getElementById('carousel');
+        let scrollInterval = 5000; // 10 seconds
+
+        function autoScroll() {
+            if (carousel.scrollLeft + carousel.clientWidth >= carousel.scrollWidth) {
+                // If at the end, go back to the start
+                carousel.scrollTo({ left: 0, behavior: 'smooth' });
+            } else {
+                // Scroll to the next item
+                carousel.scrollBy({ left: carousel.clientWidth, behavior: 'smooth' });
+            }
+        }
+
+        // Set interval to scroll every 10 seconds
+        setInterval(autoScroll, scrollInterval);
+    </script>
+    
+    
+    <!-- Carousel for New Arrivals -->
+    <div class="px-2 py-2 mt-10">
+        <p class="font-bold text-gray-600 mb-2">Up to 50% Off on Fine Dining</p>
+        
+        <div class="carousel-container">
+            <div class="carousel" id="carousel2">
+                <img class="carousel-item" src="{% static 'dineapp/images/ads.jfif' %}" alt="New Arrival 1">
+                <img class="carousel-item" src="{% static 'dineapp/images/newarrivals2.jfif' %}" alt="New Arrival 2">
+                <img class="carousel-item" src="{% static 'dineapp/images/ads.jfif' %}" alt="New Arrival 3">
+                <img class="carousel-item" src="{% static 'dineapp/images/newarrivals2.jfif' %}" alt="New Arrival 2">
+            </div>
+        </div>
+    </div>
+
+    <!-- Script for auto-scrolling -->
+    <script>
+        const carousel2 = document.getElementById('carousel2');
+        let scrollInterval2 = 100; // 10 seconds
+
+        function autoScroll() {
+            if (carousel2.scrollLeft + carousel2.clientWidth >= carousel2.scrollWidth) {
+                // If at the end, go back to the start
+                carousel2.scrollTo({ left: 0, behavior: 'smooth' });
+            } else {
+                // Scroll to the next item
+                carousel2.scrollBy({ left: carousel2.clientWidth, behavior: 'smooth' });
+            }
+        }
+
+        // Set interval to scroll every 10 seconds
+        setInterval(autoScroll, scrollInterval);
+    </script>
+    
+</div>
+
+
+
+<!-- end -->
+{% endblock %}

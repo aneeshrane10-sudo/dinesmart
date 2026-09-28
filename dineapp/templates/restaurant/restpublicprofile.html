@@ -1,0 +1,145 @@
+{% extends 'client/base.html' %}
+
+{% block title %}Restaurant Profile - DineSmart{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
+
+    <!-- Restaurant Header with Background -->
+    <div class="relative w-full h-20 bg-gradient-to-r from-green-500 to-blue-500"></div>
+
+    <!-- Restaurant Info Section -->
+    <div class="flex flex-col items-center p-6">
+        <div class="text-center">
+            <img src="data:image/jpeg;base64,{{ restaurant.baseimg }}" class="mx-auto w-24 h-24 rounded-full border-4 border-purple-400 shadow-md">
+
+            <h2 class="text-3xl font-semibold">{{ restaurant.name }}</h2>
+            <p class="text-gray-600 mt-2">{{ restaurant.address }}</p>
+            <p class="text-gray-600">📞 {{ restaurant.contact }}</p>
+            <p class="text-gray-600">📧 {{ restaurant.email }}</p>
+            <p class="text-yellow-500 font-semibold">Rating: {{ restaurant.rating }} / 5</p>
+        </div>
+    </div>
+
+    <!-- Restaurant Details and Toggle Sections -->
+    <div class="p-6">
+        <div class="space-y-4">
+            <!-- Restaurant Description Section -->
+            <!-- <div class="border-b pb-4">
+                <h3 class="text-xl font-semibold cursor-pointer" onclick="toggleSection('description')">🔽 Description </h3>
+                <div id="description" class="hidden">
+                    <p class="text-gray-700 mt-2">{{ restaurant.description }}</p>
+                </div>
+            </div> -->
+
+            <!-- Restaurant Gallery Section -->
+            <div class="border-b pb-4">
+                <h3 class="text-xl font-semibold cursor-pointer" onclick="toggleSection('gallery')">🔽 Gallery</h3>
+                <div id="gallery" class="hidden">
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
+                        {% for gallery_item in gallery %}
+                            <div class="bg-gray-200 p-2 rounded-lg">
+                                <img src="{{ gallery_item.baseimg }}" alt="{{ gallery_item.title }}" class="w-full h-48 object-cover rounded-md">
+                                <p class="mt-2 text-center">{{ gallery_item.title }}</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Restaurant Products Section -->
+            <div class="border-b pb-4">
+                <h3 class="text-xl font-semibold cursor-pointer" onclick="toggleSection('products')">🔽 Products</h3>
+                <div id="products" class="hidden">
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
+                        {% for product in products %}
+                            <div class="bg-gray-100 p-4 rounded-lg">
+                                <img src="{{ product.image }}" alt="{{ product.name }}" class="w-full h-32 object-cover rounded-md">
+                                <h4 class="text-lg font-medium mt-2">{{ product.name }}</h4>
+                                <p class="text-gray-500">{{ product.category }}</p>
+                                <p class="text-gray-600 mt-2">Rs. {{ product.price }}</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Restaurant Sales Section -->
+            <div class="border-b pb-4">
+                <h3 class="text-xl font-semibold cursor-pointer" onclick="toggleSection('sales')">🔽 Sales</h3>
+                <div id="sales" class="hidden">
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
+                        {% for sale in sales %}
+                            <div class="mt-4 border rounded-md shadow-md p-2">
+                                <img src="{{ sale.baseimg }}" alt="{{ sale.title }}" class="mx-auto w-[250px] h-32 object-cover rounded-md">
+
+                                <h4 class="font-medium">{{ sale.title }}</h4>
+                                <p class="text-gray-600">{{ sale.description }}</p>
+                                <p class="text-green-500 mt-2">Sale from {{ sale.startdate }} to {{ sale.enddate }}</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Restaurant Feedback Section -->
+            <div>
+                <h3 class="text-xl font-semibold cursor-pointer" onclick="toggleSection('feedback')">🔽 Feedback</h3>
+                <div id="feedback" class="hidden space-y-6">
+                    <!-- Existing Feedback List -->
+                    <ul>
+                        {% for feedback in feedbacks %}
+                        <div class="mt-2
+                            {% if feedback.emotion == 'Positive' %}
+                                bg-green-100
+                            {% elif feedback.emotion == 'Neutral' %}
+                                bg-gray-100
+                            {% elif feedback.emotion == 'Negative' %}
+                                bg-red-100
+                            {% else %}
+                                bg-white
+                            {% endif %}
+                            p-4 rounded-md">
+                            <p class="text-sm font-semibold text-gray-700">{{ feedback.createdon|date:"F j, Y" }}</p>
+                            <p class="mt-2 text-gray-800">{{ feedback.feedback }}</p>
+                        </div>
+                        {% endfor %}
+                    </ul>
+
+                    <!-- Feedback Form -->
+                    <div class="bg-white p-6 rounded-md shadow-md">
+                        <h4 class="text-lg font-semibold mb-4">Submit Your Feedback</h4>
+                        <form method="POST" action="/submitFeedback/">
+                            {% csrf_token %}
+                            <input type="hidden" name="restaurantId" value="{{ restaurant.restaurantid }}">
+                            <input type="hidden" name="restaurantName" value="{{ restaurant.name }}">
+
+                            <div class="mb-4">
+                                <label for="feedback" class="block text-gray-700 font-medium mb-2">Your Feedback</label>
+                                <textarea name="feedback" id="feedback" rows="4" class="w-full p-2 border rounded" placeholder="Write your feedback here..." required></textarea>
+                            </div>
+
+                            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                                Submit Feedback
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+
+            
+        </div>
+    </div>
+
+</div>
+
+<script>
+    function toggleSection(sectionId) {
+        const section = document.getElementById(sectionId);
+        section.classList.toggle('hidden');
+    }
+</script>
+
+{% endblock %}

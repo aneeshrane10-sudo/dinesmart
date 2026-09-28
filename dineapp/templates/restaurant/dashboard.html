@@ -1,0 +1,26 @@
+{% extends 'restaurant/base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-bold">Restaurant Dashboard</h1>
+
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+    <div class="p-4 bg-white rounded shadow">
+        <h2 class="text-xl font-bold">Total Products</h2>
+        <p class="text-3xl">{{ total_products }}</p>
+    </div>
+    <div class="p-4 bg-white rounded shadow">
+        <h2 class="text-xl font-bold">Total Transactions</h2>
+        <p class="text-3xl">{{ total_transactions }}</p>
+    </div>
+    <div class="p-4 bg-white rounded shadow">
+        <h2 class="text-xl font-bold">Total Revenue</h2>
+        <p class="text-3xl">Rs. {{ total_revenue }}</p>
+    </div>
+    <div class="p-4 bg-white rounded shadow">
+        <h2 class="text-xl font-bold">Total Offers</h2>
+        <p class="text-3xl">Rs. {{ total_offers }}</p>
+    </div>
+</div>
+{% endblock %}

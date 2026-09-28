@@ -1,0 +1,441 @@
+{% extends 'restaurant/base.html' %}
+{% block title %}Zone Calibrator — DineSmart CV{% endblock %}
+
+{% block content %}
+<div class="calibrator-page">
+
+  <!-- Header -->
+  <div class="cal-header">
+    <div>
+      <h1 class="cal-title">🎯 Zone Calibrator</h1>
+      <p class="cal-subtitle">Draw polygon zones around each table in your camera frame</p>
+    </div>
+    <div class="cal-actions">
+      <a href="{% url 'occupancy_dashboard' %}" class="btn-secondary">← Back to Dashboard</a>
+      <button id="saveAllZones" class="btn-primary" onclick="saveAllZones()">💾 Save All Zones</button>
+    </div>
+  </div>
+
+  <div class="cal-layout">
+
+    <!-- Left Panel: Canvas -->
+    <div class="cal-canvas-panel">
+      <div class="canvas-toolbar">
+        <button class="tool-btn active" id="toolDraw" onclick="setTool('draw')">✏️ Draw Zone</button>
+        <button class="tool-btn" id="toolSelect" onclick="setTool('select')">🔲 Select</button>
+        <button class="tool-btn danger" id="toolDelete" onclick="deleteSelected()">🗑️ Delete</button>
+        <div class="toolbar-sep"></div>
+        <label class="tool-btn upload-btn" for="frameUpload">📷 Upload Frame / Video</label>
+        <input type="file" id="frameUpload" accept="image/*,video/*" style="display:none" onchange="handleFileUpload(this)">
+        <div class="toolbar-sep"></div>
+        <span class="tool-hint">Click to add points • Double-click to close polygon</span>
+      </div>
+      <div class="canvas-wrapper" id="canvasWrapper">
+        <canvas id="calibratorCanvas"></canvas>
+        <div class="canvas-placeholder" id="canvasPlaceholder">
+          <div class="placeholder-content">
+            <span class="placeholder-icon">📷</span>
+            <p>Upload a top-down photo or video of your restaurant</p>
+            <label class="btn-primary" for="frameUpload">Upload Frame / Video</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Panel: Zone List -->
+    <div class="cal-sidebar">
+      <div class="sidebar-header">
+        <h2>Table Zones</h2>
+        <span class="zone-count" id="zoneCount">0 zones</span>
+      </div>
+
+      <div id="zoneList" class="zone-list"></div>
+
+      <div class="sidebar-footer">
+        <h3>New Zone Settings</h3>
+        <div class="form-group">
+          <label>Label</label>
+          <input type="text" id="newZoneLabel" placeholder="e.g. Table 1" class="form-input">
+        </div>
+        <div class="form-group">
+          <label>Capacity (seats)</label>
+          <input type="number" id="newZoneCapacity" value="4" min="1" max="20" class="form-input">
+        </div>
+        <div class="form-group">
+          <label>Cooldown (seconds)</label>
+          <input type="number" id="newZoneCooldown" value="300" min="30" max="1800" class="form-input">
+          <span class="hint">300s = 5 minutes</span>
+        </div>
+        <div class="form-group">
+          <label>Zone Color</label>
+          <input type="color" id="newZoneColor" value="#00e676" class="form-color">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #0f0f1a; color: #e0e0e0; font-family: 'Segoe UI', sans-serif; }
+
+.calibrator-page { padding: 1.5rem; min-height: 100vh; }
+
+.cal-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+  .cal-title { font-size: 1.8rem; font-weight: 700; background: linear-gradient(135deg, #00e676, #448aff); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.cal-subtitle { color: #9e9e9e; margin-top: 0.25rem; }
+.cal-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+
+.btn-primary { background: linear-gradient(135deg, #00e676, #00c853); color: #000; border: none; padding: 0.6rem 1.2rem; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: all 0.2s; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; }
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 15px rgba(0,230,118,0.4); }
+.btn-secondary { background: rgba(255,255,255,0.08); color: #e0e0e0; border: 1px solid rgba(255,255,255,0.15); padding: 0.6rem 1.2rem; border-radius: 8px; cursor: pointer; font-weight: 500; font-size: 0.9rem; transition: all 0.2s; text-decoration: none; display: inline-flex; align-items: center; }
+.btn-secondary:hover { background: rgba(255,255,255,0.15); }
+
+.cal-layout { display: grid; grid-template-columns: 1fr 300px; gap: 1.5rem; }
+
+.cal-canvas-panel { display: flex; flex-direction: column; gap: 0; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; overflow: hidden; }
+
+.canvas-toolbar { display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1rem; background: rgba(0,0,0,0.3); border-bottom: 1px solid rgba(255,255,255,0.08); flex-wrap: wrap; }
+.tool-btn { background: rgba(255,255,255,0.08); color: #e0e0e0; border: 1px solid rgba(255,255,255,0.15); padding: 0.4rem 0.8rem; border-radius: 6px; cursor: pointer; font-size: 0.82rem; transition: all 0.2s; display: inline-flex; align-items: center; gap: 0.3rem; }
+.tool-btn:hover { background: rgba(255,255,255,0.15); }
+.tool-btn.active { background: rgba(0,230,118,0.2); border-color: #00e676; color: #00e676; }
+.tool-btn.danger { color: #ff5252; border-color: rgba(255,82,82,0.4); }
+.tool-btn.danger:hover { background: rgba(255,82,82,0.15); }
+.toolbar-sep { width: 1px; height: 24px; background: rgba(255,255,255,0.1); margin: 0 0.25rem; }
+.tool-hint { color: #9e9e9e; font-size: 0.78rem; margin-left: auto; }
+.upload-btn { cursor: pointer; }
+
+.canvas-wrapper { position: relative; flex: 1; display: flex; min-height: 500px; }
+#calibratorCanvas { display: block; width: 100%; height: 100%; cursor: crosshair; }
+.canvas-placeholder { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(15,15,26,0.95); }
+.placeholder-content { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+.placeholder-icon { font-size: 4rem; }
+.placeholder-content p { color: #9e9e9e; max-width: 260px; line-height: 1.5; }
+
+.cal-sidebar { display: flex; flex-direction: column; gap: 1rem; }
+
+.sidebar-header { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 1rem; display: flex; justify-content: space-between; align-items: center; }
+.sidebar-header h2 { font-size: 1rem; font-weight: 600; }
+.zone-count { background: rgba(0,230,118,0.15); color: #00e676; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+
+.zone-list { display: flex; flex-direction: column; gap: 0.5rem; max-height: 300px; overflow-y: auto; }
+.zone-item { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 0.8rem; display: flex; align-items: center; gap: 0.75rem; cursor: pointer; transition: all 0.2s; }
+.zone-item:hover, .zone-item.selected { border-color: rgba(0,230,118,0.4); background: rgba(0,230,118,0.06); }
+.zone-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+.zone-info { flex: 1; min-width: 0; }
+.zone-label { font-weight: 600; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.zone-meta { color: #9e9e9e; font-size: 0.75rem; }
+.zone-del-btn { background: none; border: none; color: #ff5252; cursor: pointer; font-size: 1.1rem; padding: 0.2rem; border-radius: 4px; transition: all 0.2s; opacity: 0.6; }
+.zone-del-btn:hover { opacity: 1; background: rgba(255,82,82,0.15); }
+
+.sidebar-footer { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 1rem; }
+.sidebar-footer h3 { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.75rem; color: #9e9e9e; text-transform: uppercase; letter-spacing: 0.05em; }
+.form-group { margin-bottom: 0.75rem; }
+.form-group label { display: block; font-size: 0.8rem; color: #9e9e9e; margin-bottom: 0.3rem; }
+.form-input { width: 100%; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 0.5rem 0.7rem; color: #e0e0e0; font-size: 0.9rem; outline: none; transition: border-color 0.2s; }
+.form-input:focus { border-color: #448aff; }
+.form-color { width: 100%; height: 36px; padding: 2px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; cursor: pointer; }
+.hint { font-size: 0.75rem; color: #9e9e9e; margin-top: 0.2rem; display: block; }
+
+.toast { position: fixed; bottom: 1.5rem; right: 1.5rem; padding: 0.8rem 1.2rem; border-radius: 10px; font-weight: 600; font-size: 0.9rem; z-index: 9999; animation: toastIn 0.3s ease; }
+.toast.success { background: rgba(0,230,118,0.9); color: #000; }
+.toast.error { background: rgba(255,82,82,0.9); color: #fff; }
+@keyframes toastIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+@media (max-width: 900px) { .cal-layout { grid-template-columns: 1fr; } }
+</style>
+
+<script>
+// ─── State ─────────────────────────────────────────────────────────────────
+const state = {
+  zones: JSON.parse('{{ zones_json|escapejs }}'),
+  currentPolygon: [],
+  isDrawing: false,
+  tool: 'draw',
+  selectedZoneIndex: null,
+  bgImage: null,
+  bgImageLoaded: false,
+  cameraId: parseInt('{{ active_camera_id|default:"0" }}') || null,
+};
+
+// Load existing static frame
+const staticFrameB64 = '{{ static_frame|escapejs }}';
+if (staticFrameB64 && staticFrameB64 !== '*' && staticFrameB64 !== '') {
+  const bgImg = new Image();
+  bgImg.onload = () => {
+    state.bgImage = bgImg;
+    state.bgImageLoaded = true;
+    hidePlaceholder();
+    redraw();
+  };
+  bgImg.src = 'data:image/jpeg;base64,' + staticFrameB64;
+}
+
+// ─── Canvas Setup ──────────────────────────────────────────────────────────
+const canvas = document.getElementById('calibratorCanvas');
+const ctx = canvas.getContext('2d');
+const wrapper = document.getElementById('canvasWrapper');
+
+function resizeCanvas() {
+  const rect = wrapper.getBoundingClientRect();
+  canvas.width = rect.width || 800;
+  canvas.height = Math.max(rect.height, 500);
+  redraw();
+}
+window.addEventListener('resize', resizeCanvas);
+setTimeout(resizeCanvas, 100);
+
+// ─── Colors ────────────────────────────────────────────────────────────────
+const ZONE_COLORS = ['#00e676','#448aff','#ff6d00','#e040fb','#ffea00','#00e5ff','#ff4081','#69f0ae'];
+
+function getZoneColor(idx) {
+  const z = state.zones[idx];
+  return z?.color || ZONE_COLORS[idx % ZONE_COLORS.length];
+}
+
+// ─── Drawing ───────────────────────────────────────────────────────────────
+function redraw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Draw background image
+  if (state.bgImage) {
+    const scale = Math.min(canvas.width / state.bgImage.width, canvas.height / state.bgImage.height);
+    const iw = state.bgImage.width * scale;
+    const ih = state.bgImage.height * scale;
+    const ix = (canvas.width - iw) / 2;
+    const iy = (canvas.height - ih) / 2;
+    ctx.drawImage(state.bgImage, ix, iy, iw, ih);
+  }
+
+  // Draw completed zones
+  state.zones.forEach((zone, idx) => {
+    if (!zone.polygon_coords || zone.polygon_coords.length < 3) return;
+    const color = zone.color || ZONE_COLORS[idx % ZONE_COLORS.length];
+    const isSelected = state.selectedZoneIndex === idx;
+
+    ctx.beginPath();
+    zone.polygon_coords.forEach(([x, y], i) => i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y));
+    ctx.closePath();
+
+    ctx.fillStyle = hexToRgba(color, 0.25);
+    ctx.fill();
+    ctx.strokeStyle = isSelected ? '#fff' : color;
+    ctx.lineWidth = isSelected ? 3 : 2;
+    ctx.setLineDash(isSelected ? [6, 3] : []);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Label
+    const cx = zone.polygon_coords.reduce((s, [x]) => s + x, 0) / zone.polygon_coords.length;
+    const cy = zone.polygon_coords.reduce((s, [, y]) => s + y, 0) / zone.polygon_coords.length;
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 13px Segoe UI';
+    ctx.textAlign = 'center';
+    ctx.fillText(zone.label || `Zone ${idx + 1}`, cx, cy);
+
+    // Draw vertices
+    zone.polygon_coords.forEach(([x, y]) => {
+      ctx.beginPath();
+      ctx.arc(x, y, 5, 0, Math.PI * 2);
+      ctx.fillStyle = color;
+      ctx.fill();
+    });
+  });
+
+  // Draw in-progress polygon
+  if (state.currentPolygon.length > 0) {
+    ctx.beginPath();
+    state.currentPolygon.forEach(([x, y], i) => i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y));
+    ctx.strokeStyle = '#ffea00';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([5, 3]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    state.currentPolygon.forEach(([x, y], i) => {
+      ctx.beginPath();
+      ctx.arc(x, y, 5, 0, Math.PI * 2);
+      ctx.fillStyle = i === 0 ? '#ffea00' : '#fff';
+      ctx.fill();
+    });
+  }
+}
+
+// ─── Mouse Events ──────────────────────────────────────────────────────────
+canvas.addEventListener('click', (e) => {
+  const [x, y] = getCanvasPos(e);
+  if (state.tool !== 'draw') return;
+
+  // Close polygon if clicking near first point
+  if (state.currentPolygon.length >= 3) {
+    const [fx, fy] = state.currentPolygon[0];
+    if (Math.hypot(x - fx, y - fy) < 15) {
+      finalizePolygon();
+      return;
+    }
+  }
+
+  state.currentPolygon.push([x, y]);
+  state.isDrawing = true;
+  redraw();
+});
+
+canvas.addEventListener('dblclick', (e) => {
+  if (state.tool !== 'draw') return;
+  if (state.currentPolygon.length >= 3) finalizePolygon();
+});
+
+function getCanvasPos(e) {
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
+  return [(e.clientX - rect.left) * scaleX, (e.clientY - rect.top) * scaleY];
+}
+
+function finalizePolygon() {
+  if (state.currentPolygon.length < 3) return;
+
+  const label = document.getElementById('newZoneLabel').value || `Table ${state.zones.length + 1}`;
+  const capacity = parseInt(document.getElementById('newZoneCapacity').value) || 4;
+  const cooldown = parseInt(document.getElementById('newZoneCooldown').value) || 300;
+  const color = document.getElementById('newZoneColor').value || ZONE_COLORS[state.zones.length % ZONE_COLORS.length];
+
+  state.zones.push({
+    label, capacity, cooldown_seconds: cooldown, color,
+    polygon_coords: [...state.currentPolygon],
+    zone_id: null,
+  });
+
+  state.currentPolygon = [];
+  state.isDrawing = false;
+
+  // Auto-increment label
+  const match = label.match(/(\D+)(\d+)$/);
+  if (match) {
+    document.getElementById('newZoneLabel').value = match[1] + (parseInt(match[2]) + 1);
+  }
+
+  updateZoneList();
+  redraw();
+}
+
+// ─── Zone List UI ─────────────────────────────────────────────────────────
+function updateZoneList() {
+  const list = document.getElementById('zoneList');
+  document.getElementById('zoneCount').textContent = `${state.zones.length} zone${state.zones.length !== 1 ? 's' : ''}`;
+
+  list.innerHTML = state.zones.map((zone, idx) => `
+    <div class="zone-item ${state.selectedZoneIndex === idx ? 'selected' : ''}" onclick="selectZone(${idx})">
+      <div class="zone-dot" style="background:${zone.color || ZONE_COLORS[idx % ZONE_COLORS.length]}"></div>
+      <div class="zone-info">
+        <div class="zone-label">${zone.label}</div>
+        <div class="zone-meta">${zone.polygon_coords?.length || 0} pts • ${zone.capacity} seats • ${zone.cooldown_seconds}s cooldown</div>
+      </div>
+      <button class="zone-del-btn" onclick="event.stopPropagation(); removeZone(${idx})">✕</button>
+    </div>
+  `).join('');
+}
+
+function selectZone(idx) {
+  state.selectedZoneIndex = idx;
+  updateZoneList();
+  redraw();
+}
+
+function removeZone(idx) {
+  state.zones.splice(idx, 1);
+  state.selectedZoneIndex = null;
+  updateZoneList();
+  redraw();
+}
+
+function deleteSelected() {
+  if (state.selectedZoneIndex !== null) removeZone(state.selectedZoneIndex);
+}
+
+// ─── Tools ─────────────────────────────────────────────────────────────────
+function setTool(tool) {
+  state.tool = tool;
+  document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(`tool${tool.charAt(0).toUpperCase() + tool.slice(1)}`).classList.add('active');
+  canvas.style.cursor = tool === 'draw' ? 'crosshair' : 'default';
+  if (tool !== 'draw') { state.currentPolygon = []; redraw(); }
+}
+
+// ─── File Upload ───────────────────────────────────────────────────────────
+async function handleFileUpload(input) {
+  const file = input.files[0];
+  if (!file) return;
+
+  showToast('Uploading...', 'success');
+  const formData = new FormData();
+  formData.append(file.type.startsWith('video') ? 'video_file' : 'image_file', file);
+
+  try {
+    const resp = await fetch('/occupancy/upload-frame/', {
+      method: 'POST',
+      body: formData,
+      headers: { 'X-CSRFToken': getCookie('csrftoken') },
+    });
+    const data = await resp.json();
+    if (data.success) {
+      state.cameraId = data.camera_id;
+      if (data.static_frame) {
+        const img = new Image();
+        img.onload = () => { state.bgImage = img; state.bgImageLoaded = true; hidePlaceholder(); redraw(); };
+        img.src = `data:image/jpeg;base64,${data.static_frame}`;
+      }
+      showToast('Frame loaded! Now draw zones.', 'success');
+    } else {
+      showToast(data.error || 'Upload failed', 'error');
+    }
+  } catch (e) {
+    showToast('Network error', 'error');
+  }
+}
+
+// ─── Save Zones ─────────────────────────────────────────────────────────────
+async function saveAllZones() {
+  if (!state.cameraId) { showToast('Upload a video/image first', 'error'); return; }
+  if (state.zones.length === 0) { showToast('Draw at least one zone', 'error'); return; }
+
+  try {
+    const resp = await fetch('/occupancy/calibrate/save/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') },
+      body: JSON.stringify({ camera_id: state.cameraId, zones: state.zones }),
+    });
+    const data = await resp.json();
+    if (data.success) {
+      showToast(`✅ ${data.message}`, 'success');
+      setTimeout(() => window.location.href = '/occupancy/dashboard/', 1500);
+    } else {
+      showToast(data.error || 'Save failed', 'error');
+    }
+  } catch (e) {
+    showToast('Network error', 'error');
+  }
+}
+
+// ─── Helpers ────────────────────────────────────────────────────────────────
+function hidePlaceholder() { document.getElementById('canvasPlaceholder').style.display = 'none'; }
+function hexToRgba(hex, alpha) {
+  const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+function getCookie(name) {
+  const m = document.cookie.match('(?:^|;)\\s*' + name + '=([^;]*)');
+  return m ? decodeURIComponent(m[1]) : '';
+}
+function showToast(msg, type='success') {
+  const t = document.createElement('div');
+  t.className = `toast ${type}`; t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3000);
+}
+
+// Init
+updateZoneList();
+redraw();
+</script>
+{% endblock %}

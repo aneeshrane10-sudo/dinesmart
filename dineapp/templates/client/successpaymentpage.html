@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Success</title>
+    <script>
+        // Redirect to placed orders page after 10 seconds
+        setTimeout(function(){
+            window.location.href = "{% url 'transaction' %}";  // Adjust this URL if needed
+        }, 10000);
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 500px;
+        }
+        .container h1 {
+            color: #4CAF50;
+        }
+        .container p {
+            font-size: 18px;
+            color: #333;
+        }
+        .transaction-id {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 20px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Payment Successful!</h1>
+        <p>Your payment was processed successfully.</p>
+        <p class="transaction-id">Transaction ID: {{ transactionid }}</p>
+        <p>You will be redirected to your placed orders in a moment...</p>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Form</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+
+    <div class="bg-gray-100 grid grid-cols-2 gap-4 p-10 items-center">
+        <!-- Cart Items Section -->
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+            <h2 class="text-xl font-bold mb-6 text-indigo-600">Your Cart</h2>
+            <ul class="space-y-2">
+                {% for item in cartData %}
+                    <li class="flex justify-between border-b pb-2">
+                        <span class="font-medium">{{ item.productName }}</span>
+                        <span class="text-gray-700">x{{ item.quantity }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+            <h3 class="mt-4 text-lg font-semibold">Total Amount: <span class="text-green-600">Rs. {{ totalAmount }}</span></h3>
+        </div>
+
+        <!-- Payment Form Section -->
+        <div>
+            <form action="{% url 'stripepayment' %}" method="POST" class="bg-white p-6 rounded-lg shadow-lg">
+                {% csrf_token %}
+
+                <h2 class="text-2xl font-semibold text-center mb-4">Stripe Payment <i class="bg-yellow-200 px-2 py-1 rounded-md">Test Mode</i>  </h2>
+                <h3 class="text-lg text-center text-gray-500 mb-4">Total: Rs. {{ totalAmount }}</h3>
+
+                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <!-- Added 'name' attribute for email -->
+                <input type="email" id="email" name="email" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 mb-4" placeholder="example@example.com" required>
+
+                <input type="hidden" name="totalAmount" value="{{ totalAmount }}" required>
+
+                <label for="cardNumber" class="block text-sm font-medium text-gray-700 mb-1">Card Information</label>
+                <input type="text" id="cardNumber" name="cardNumber" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 mb-2" placeholder="4242 4242 4242 4242" maxlength="16" inputmode="numeric" required>
+
+                <div class="flex space-x-2 mb-2">
+                    <input type="text" 
+                        name="expiryDate"
+                        placeholder="MM / YY" 
+                        maxlength="7" 
+                        title="Enter a valid expiry date (MM/YY)" 
+                        class="w-1/2 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+                        required>
+
+                    <input type="text" 
+                        name="cvc" 
+                        placeholder="CVC" 
+                        maxlength="4" 
+                        pattern="^\d{3,4}$" 
+                        title="Enter a valid CVC (3 or 4 digits)" 
+                        inputmode="numeric" 
+                        class="w-1/2 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+                        required>
+                </div>
+
+                <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Name on Card</label>
+                <input type="text" id="name" name="name" class="w-full px-4 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 mb-4" placeholder="John Doe" pattern="[A-Za-z\s]+" title="Name should only contain letters and spaces" required>
+
+                <label for="address" class="block text-sm font-medium text-gray-700 mb-1">Delivery Address</label>
+                <input type="text" id="address" name="address" class="w-full px-4 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 mb-4" placeholder="abcd, city - 25" required>
+
+                <button type="submit" class="w-full bg-blue-500 text-white py-1 px-4 rounded-md font-medium hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                    Pay Now
+                </button>
+            </form>
+
+        </div>
+    </div>
+
+    <div class="text-center text-sm text-gray-500">
+        Powered by <a href="https://stripe.com/in/payments/link" target="_blank" class="text-blue-600 hover:underline">Stripe</a>
+    </div>
+
+</body>
+</html>

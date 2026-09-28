@@ -1,0 +1,46 @@
+{% extends 'client/base.html' %}
+
+{% block title %}{{ product.name }} - Product Details{% endblock %}
+
+{% block content %}
+    <div class="max-w-4xl mx-auto mt-10">
+        <!-- Product Image -->
+        <div class="mb-6">
+            <img src="{{ product.image }}" alt="{{ product.name }}" class="w-full h-72 object-cover rounded-md">
+        </div>
+
+        <!-- Product Information -->
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-3xl font-semibold text-center mb-4">{{ product.name }}</h2>
+
+            <div class="mb-4">
+                <p class="text-xl font-medium text-gray-600">Category: <span class="text-gray-800">{{ product.category }}</span></p>
+                <p class="text-xl font-medium text-gray-600">Price: <span class="text-green-600">Rs. {{ product.price }}</span></p>
+            </div>
+
+            <!-- Metadata -->
+            <div class="mb-4">
+                <h3 class="text-2xl font-semibold text-gray-800 mb-2">Product Details</h3>
+                <p class="text-gray-700">{{ product.metadata }}</p>
+            </div>
+
+            <!-- Related Restaurant -->
+            <div class="mt-6">
+                <h3 class="text-2xl font-semibold text-gray-800 mb-2">Restaurant</h3>
+                <p class="text-lg text-gray-600">Restaurant Name: <span class="text-gray-800">{{ product.restaurant.name }}</span></p>
+                <p class="text-lg text-gray-600">Location: <span class="text-gray-800">{{ product.restaurant.address }}</span></p>
+                <p class="text-lg text-gray-600">Contact: <span class="text-gray-800">{{ product.restaurant.contact }}</span></p>
+            </div>
+
+            <!-- Order Button -->
+            <!-- <div class="mt-6 text-center">
+                <a href="#" class="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 focus:outline-none">Order Now</a>
+            </div> -->
+            <form method="POST" action="{% url 'addtocart' product.prodid %}">
+                {% csrf_token %}
+                <button type="submit" class="w-full bg-green-500 text-white py-2 rounded-md mt-2">Add to Cart</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+

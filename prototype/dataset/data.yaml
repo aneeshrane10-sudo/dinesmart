@@ -1,0 +1,14 @@
+path: c:/aneesh/prototype/dataset
+train: train/images
+val: valid/images
+test: test/images
+
+nc: 1
+names: ['person']
+
+roboflow:
+  workspace: lynn-at4oo
+  project: restaurant-bdxtt
+  version: 2
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/lynn-at4oo/restaurant-bdxtt/dataset/2

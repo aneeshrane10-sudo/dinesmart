@@ -1,0 +1,59 @@
+{% extends 'client/base.html' %}
+
+{% block title %}Profile - DineSmart{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
+
+    <!-- Profile Header with Background Gradient -->
+    <div class="relative w-full h-40 bg-gradient-to-r from-purple-500 to-blue-500"></div>
+
+    <!-- Profile Info -->
+    <div class="relative flex flex-col items-center p-4">
+        <!-- Profile Image -->
+        <div class="absolute -top-12">
+            {% if customer.baseimg and customer.baseimg != "*" %}
+                <img src="{{ customer.baseimg }}" 
+                    class="w-24 h-24 rounded-full border-4 border-white shadow-md">
+            {% else %}
+                <div class="w-24 h-24 rounded-full bg-gray-300 flex items-center justify-center text-white text-lg">
+                    {{ user.username|slice:":1" }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="mt-12 text-center">
+            <h2 class="text-2xl font-semibold">{{ user.username | title }}</h2>
+            <p class="text-gray-600"></p>
+            <p class="text-gray-500">📍 {{ customer.address }}</p>
+        </div>
+
+        <!-- Stats: Followers & Connections -->
+        <div class="flex justify-center space-x-8 mt-4">
+            <p class="text-blue-600 font-semibold">📞 {{ customer.contact }}</p>
+            <p class="text-blue-600 font-semibold">📧 {{ customer.email }}</p>
+        </div>
+
+        <!-- Stats: Followers & Connections -->
+        <div class="flex justify-center space-x-8 mt-4">
+            <p class="text-gray-600 font-semibold">Credit Score : {{ creditdetails.creditscore }}</p>
+            <p class="text-gray-600 font-semibold">Total Transaction : {{ transactioncount }}</p>
+        </div>
+
+
+
+        <!-- Buttons: Follow & More -->
+        <div class="flex space-x-4 mt-4">
+            <a href="{% url 'transaction' %}" class="px-6 py-2 bg-blue-600 text-white rounded-md font-semibold">📄 Transaction</a>
+            <!-- <a href="#" class="px-6 py-2 bg-gray-300 text-gray-700 rounded-md font-semibold">🗺️ Me on Map</a> -->
+            <a href="{% url 'meonmap' %}" class="px-6 py-2 bg-gray-300 text-gray-700 rounded-md font-semibold">🗺️ Me on Map</a>
+
+            <!-- <a href="{% url 'meonmap' %}" class="px-6 py-2 bg-gray-300 text-gray-700 rounded-md font-semibold">🗺️ Me on Map</a> -->
+            <a href="{% url 'user_logout' %}" class="px-6 py-2 bg-red-200 text-gray-700 rounded-md font-semibold">Logout</a>
+        </div>
+        <a href="/qrscanner" class="mt-4 px-6 py-2 bg-indigo-100 hover:bg-indigo-400 hover:text-white text-gray-700 rounded-md font-semibold">Download APP (.apk)</a>
+        
+    </div>
+
+</div>
+{% endblock %}

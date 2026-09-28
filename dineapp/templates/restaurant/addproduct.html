@@ -1,0 +1,48 @@
+{% extends 'restaurant/base.html' %}
+
+{% block title %}Add Product{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-bold">Add New Product</h1>
+
+<form method="POST" enctype="multipart/form-data" class="bg-white p-6 mt-4 rounded shadow-md">
+    {% csrf_token %}
+    <label class="block text-gray-700 font-bold">Product Name</label>
+    <input type="text" name="name" required class="w-full p-2 border rounded-md">
+
+    <label class="block text-gray-700 font-bold mt-3">Category</label>
+    <select name="category" required class="w-full p-2 border rounded-md">
+        <option value="Snacks">🍟 Snacks</option>
+        <option value="Starters">🍢 Starters</option>
+        <option value="Thali">🍽️ Thali</option>
+        <option value="Chicken">🍗 Chicken</option>
+        <option value="Pizza">🍕 Pizza</option>
+        <option value="Burger">🍔 Burger</option>
+        <option value="Coffee">☕ Coffee</option>
+        <option value="Boba">🥤 Boba</option>
+        <option value="Desserts">🍰 Desserts</option>
+        <option value="Pasta">🍝 Pasta</option>
+        <option value="Drinks">🥂 Drinks</option>
+        <option value="IceCream">🍦 Ice Cream</option>
+        <option value="Seafood">🦞 Seafood</option>
+        <option value="Biryani">🍛 Biryani</option>
+        <option value="Vegetarian">🥗 Vegetarian</option>
+        <option value="Sweets">🍬 Sweets</option>
+        <option value="Chinese">🥡 Chinese</option>
+        <option value="SouthIndian">🍛 South Indian</option>
+        <option value="NorthIndian">🍲 North Indian</option>
+        <option value="Tandoori">🔥 Tandoori</option>
+        <option value="StreetFood">🌮 Street Food</option>
+    </select>
+
+
+    <label class="block text-gray-700 font-bold mt-3">Price</label>
+    <input type="number" name="price" step="0.01" required class="w-full p-2 border rounded-md">
+
+    <label class="block text-gray-700 font-bold mt-3">Upload Image</label>
+    <input type="file" name="image" accept="image/*" required class="w-full p-2 border rounded-md">
+
+    <button type="submit" class="mt-4 bg-green-500 text-white px-4 py-2 rounded-md">✅ Add Product</button>
+</form>
+
+{% endblock %}
